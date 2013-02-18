@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+#coding=utf-8
+from selenium import selenium
+import unittest, time, re
+import sys
+
+def test():
+	iselenium=selenium("10.5.201.222",4444,"*iexplore","http://share.autodesk.com")
+	iselenium.start()
+	sel=iselenium
+	sel.open("/sites/GBS_GRE/default.aspx")
+	sel.click("css=img[alt=\"DVD ISO File Release Sheet\"]")
+	#print unicode(sel.get_html_source()).encode('utf-8')
+	#iselenium.close()
+
+
+if __name__=="__main__":
+	test()

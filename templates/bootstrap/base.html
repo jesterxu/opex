@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Meta labels  -->
+		<meta charset="utf-8">
+		<title>{% block ititle %}{% endblock %}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		{% block metas %}
+		<meta name="description" content="Opex programming for welocalize">
+		<meta name="keywords" content=" program, blog, personal blog, linux, python, django, php, bootstrap, seo, programming">		
+		{% endblock %}
+		<meta name="author" content="Jester Xu">
+		<meta name="generator" content="Adobe Firewoks CS5, Bootstrap, Python, Django" />
+		<meta name="robots" content="index, follow, all"/>
+		{% block csss %}
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">	
+		{% endblock %}
+		<style type="text/css">
+			body {
+				padding-top: 60px;
+				padding-bottom: 40px;
+			}
+			body, p {
+				font-size: 14px;
+			}
+			.hero-unit {
+				text-align: center;
+				background: #ffffff;
+			}
+			.hero-unit p{
+				color: #777777;
+				font-size: 21px;
+			}
+			.footer{
+				text-align: center;
+			}
+		</style>
+		<link rel="shortcut icon" href="/static/favicon.ico">
+	</head>
+
+	<body onload="prettyPrint(); adjustHeightInParent()">
+		<!-- Nav Bar -->
+{% block navbar %}
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="/">OPEX</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li><a href="/">Home</a></li>
+							<li><a href="/blog">Blogs</a></li>
+							<li><a href="/articles">Articles</a></li>
+							<li><a href="/files">Files</a></li>
+							<li><a href="/page/about">About</a></li>
+							<!--li><a href="/page/contact">Contact</a></li-->
+							<li><a href="/automation">Automation</a></li>
+						</ul>				
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}	
+		<div class="container">
+{% block content %}{% endblock %}
+{% block bottom %}
+			<hr>
+			<div class="row">
+				<div class="span12 footer">
+					<p>Design: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Django</span></a> Coding: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Jester Xu</span></a> System: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">OPEX</span></a></p>
+					<p>Welocalize &copy; 2012</p>
+				</div>
+			</div>
+{% endblock %}
+		</div>
+		{% block javascriptler %}{% endblock %}
+	</body>
+</html>

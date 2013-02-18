@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block ititle %}Operational excellence - OPEX{% endblock %}						
+{% block content %}
+			<!-- Ana Tavan -->
+			<div class="hero-unit">
+				<h1>Make your life easier</h1>
+				<p>We are on the way ...... :) </P>
+			</div>
+                        <hr>
+			<!-- Kolonlar -->
+			<div class="row">
+				<div class="span4">
+					<h2>Who am I?</h2>
+					<p>I am a web interface which mantained by welocalize JN automation team.</p>
+				</div>
+				<div class="span4">
+					<h2>What I do?</h2>
+					<p>Provide the services which can make you work and life much easier. Scripts handle common file and web automation framework.</p>
+				</div>
+				<div class="span4">
+					<h2>Recent Updates</h2>
+                                        <p>The scripts completed recently</p>
+					<ul>
+					{% for blog in blogs %}
+						{% if forloop.first %}
+						<li> <span class="label label-success">New</span> <a href="{{ blog.get_absolute_url }}" title="{{ blog.description_chef }}">{% if blog.chef_title|length > 25 %} {{ blog.chef_title|slice:":25" }}... {% else %} {{ blog.chef_title }} {% endif %}</a> </li>
+						{% else %}
+						<li> <a href="{{ blog.get_absolute_url }}" title="{{ blog.description_chef }}">{{ blog.chef_title }}</a> </li>
+						{% endif %}
+					{% endfor %}
+					</ul>
+				</div>
+			</div>		
+{% endblock %}			

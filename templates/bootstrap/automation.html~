@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block ititle %}Automation APPS{% endblock %}						
+{% block content %}
+	<h2>Apps created to easy our daily work!</h2>
+	<hr>
+	<div class="app-list">
+	   <table class="app-table">
+	      <tr>
+               <td>
+		<ul class="app">
+			<li><a href="/fillrelease">Fill Release</a></li>
+		</ul> 
+		<ul class="app">
+			<li><a href="/seleniumlog">Show Selenium logs</a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+	      </td>
+	      <td>
+		<ul class="app">
+			<li><a href="">new app will be added here</a></li>
+		</ul> 
+		<ul class="app">
+			<li><a href="">       </a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+	     </td>
+             </tr>
+	  </table>
+	</div>
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+{% endblock %}	

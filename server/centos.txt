@@ -1,0 +1,35 @@
+yum install -y python-devel python-setuptools openssl openssl-devel zlib zlib-devel git libjpeg libjpeg-devel freetype freetype-devel lcms lcms-devel python-lcms python-imaging python-imaging-devel libxml2 libxml2-devel
+
+yum install -y make automake gcc gcc-c++ man man-pages libevent-devel memcached libevent-devel memcached postgresql
+
+pip install django unidecode uwsgi psycopg2 django-tagging django-pagination
+
+yum install -y httpd-devel pcre perl pcre-devel zlib zlib-devel GeoIP GeoIP-devel
+
+yum install -y python python-devel libxml2 libxml2-devel python-setuptools zlib-devel wget openssl-devel pcre pcre-devel sudo gcc make autoconf automake
+
+rpm -Uvh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+
+yum install nginx
+
+yum install subversion postgresql-server postgresql-python httpd python-psycopg2
+
+/etc/init.d/uwsgi --socket 127.0.0.1:12743 --master --workers 5 --harakiri 30 --disable-logging --daemonize /tmp/daemonize.log --pidfile /tmp/pidfile.txt --vacuum --gid 500 --uid 500 --ini /home/uwsgi.ini
+
+rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-2.noarch.rpm
+
+yum groupinstall 'Development Tools'
+
+/var/lib/pgsql/data/pg_hba.conf local all all trust
+su postgres
+createdb test
+psql test
+CREATE ROLE testuser WITH SUPERUSER LOGIN PASSWORD 'test';
+
+su postgres
+pg_dump handsoncards_db > /tmp/testdump
+mkdir -p /srv/backups
+chown postgres:postgres /srv/backups
+psql handsoncards_db < /srv/backups/handsoncards_db_backup
+
+

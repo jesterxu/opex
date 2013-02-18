@@ -1,0 +1,99 @@
+{% extends "index.html" %}
+{% block ititle %}{{ page.title }}{% endblock %}
+{% block metas %}
+		<meta name="description" content="{{ page.description_chef }}">
+		<meta name="keywords" content="{{ page.labels }}">
+{% endblock %}
+{% block csss %}
+		<link href="/static/js/prettify/prettify.css" rel="stylesheet">
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% endblock %}
+{% block icontent %}
+	<div class="span9">
+		<div class="alert alert-info">
+		  <a class="close" data-dismiss="alert" href="#">&times;</a>
+			<div class="row">
+			  {% for tex in textlink %}
+			  {% if tex.sira == 1 or tex.sira == 2 %}
+			  <div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+			  {% endif %}
+			  {% endfor %}
+			</div>
+		</div>
+		<h1><a>{{ page.title|title }}</a> <small>{{ page.created|date:"d F Y" }} </small></h1> 
+		<p class="lead"> {{ page.description|title }}</p>
+		{{ page.content|safe }}
+		<br>
+		<!-- Information -->
+		<table class="table table-bordered">
+			<tbody>
+			
+			<tr>
+				<th>
+					Author
+				</th>
+				<td>
+					<a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">{{ page.author.first_name }} {{ page.author.last_name }}</span></a>
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Description
+				</th>
+				<td>
+					{{ page.description_chef }}
+				</td>
+			</tr>											
+
+			<tr>
+				<th>
+					Number of words
+				</th>
+				<td>
+					{{ page.content|wordcount }}
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Text Length
+				</th>
+				<td>
+					{{ page.content|length }}
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Added Date
+				</th>
+				<td>
+					{{ page.created }}
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
+					Modified Date
+				</th>
+				<td>
+					{{ page.modified }}
+				</td>
+			</tr>												
+			
+			</tbody>
+		</table>						
+	</div>
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+	<script src="/static/js/prettify/prettify.js"></script>
+	<script type="text/javascript" src="http://apis.google.com/js/plusone.js">
+	  {lang: 'tr'}
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	
+{% endblock %}

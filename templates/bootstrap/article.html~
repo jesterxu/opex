@@ -1,0 +1,119 @@
+{% extends "index.html" %}
+{% block ititle %}{{ article.title }}{% endblock %}
+{% block metas %}
+		<meta name="description" content="{{ article.description_chef }}">
+		<meta name="keywords" content="{{ article.labels }}">
+{% endblock %}
+{% block csss %}
+		<link href="/static/js/prettify/prettify.css" rel="stylesheet">
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block icontent %}
+	<h1><a>{{ article.title|title }}</a> <small>{{ article.created|date:"d F Y" }}</small></h1> 
+	<p class="lead"> {{ article.description|title }}</p>
+	{{ article.content|safe }}
+	<hr>
+	<div class="alert alert-info">
+		<a class="close" data-dismiss="alert" href="#">&times;</a>
+		<div class="row">
+		{% for tex in textlink %}
+		{% if tex.sira == 3 or tex.sira == 4 %}
+		<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+		{% endif %}
+		{% endfor %}
+		</div>
+	</div>
+	<br>
+	<!-- Information -->
+	<table class="table table-bordered">
+		<tbody>
+		
+		<tr>
+			<th>
+				Author
+			</th>
+			<td>
+				<a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">{{ article.author.first_name }} {{ article.author.last_name }}</span></a>
+			</td>
+		</tr>
+		
+		<tr>
+			<th>
+				Category
+			</th>
+			<td>
+				<a href="{{ article.category.get_absolute_url }}"><span class="label label-info">{{ article.category }}</span></a>
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				Description
+			</th>
+			<td>
+				{{ article.description_chef }}
+			</td>
+		</tr>						
+		
+		<tr>
+			<th>
+				Labels
+			</th>
+			<td>
+				{% for label in article.get_tags %}
+				<a href="/articles/{{ label }}" title="{{ label }}"><span class="label label-info"># {{ label }}</span></a>
+				{% endfor %}
+			</td>
+		</tr>						
+
+		<tr>
+			<th>
+				Number of words
+			</th>
+			<td>
+				{{ article.content|wordcount }}
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				Text Length
+			</th>
+			<td>
+				{{ article.content|length }}
+			</td>
+		</tr>
+
+		<tr>
+			<th>
+				Added Date
+			</th>
+			<td>
+				{{ article.created }}
+			</td>
+		</tr>
+		
+		<tr>
+			<th>
+				Modified Date
+			</th>
+			<td>
+				{{ article.modified }}
+			</td>
+		</tr>												
+		
+		</tbody>
+	</table>
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+	<script src="/static/js/prettify/prettify.js"></script>
+	<script type="text/javascript" src="http://apis.google.com/js/plusone.js">
+	  {lang: 'tr'}
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	
+{% endblock %}

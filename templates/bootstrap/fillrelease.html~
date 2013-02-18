@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block ititle %}Fill the release table{% endblock %}						
+{% block icontent %}
+   <p>The client download link: <a href="http://10.5.201.253:8000/file/selenium-client/upload/selenium_client.rar" target="_blank">selenium_client</a><br />
+      The home site: <a href="http://share.autodesk.com" target="_blank">http://share.autodesk.com</a><br/>
+      The file link:<a href="http://share.autodesk.com/sites/GBS_GRE/_layouts/FormServer.aspx?XsnLocation=https://share.autodesk.com/sites/GBS_GRE/GRSDBA/Forms/template.xsn&SaveLocation=https%3A%2F%2Fshare%2Eautodesk%2Ecom%2Fsites%2FGBS%5FGRE%2FGRSDBA&ClientInstalled=true&Source=https%3A%2F%2Fshare%2Eautodesk%2Ecom%2Fsites%2FGBS%5FGRE%2FGRSDBA%2FForms%2FAllItems%2Easpx&DefaultItemOpen=1" target="_blank"> Release table fill link</a> <br />
+      The navigator used: IE<br /><br/>
+      Notices: Please make sure you have java environment installed and client program started before you use this tool.
+   </p>
+   <hr>
+    <form method="post" action="" enctype="multipart/form-data" accept-charset="utf-8">
+        {{iform}}
+         <br />
+         <input type="submit"  value="submit" />
+    </form>
+{% endblock %}			

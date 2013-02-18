@@ -1,0 +1,118 @@
+{% extends "index.html" %}
+{% block ititle %}{{ blog.title }}{% endblock %}
+{% block metas %}
+		<meta name="description" content="{{ blog.description_chef }}">
+		<meta name="keywords" content="{{ blog.labels }}">
+{% endblock %}
+{% block csss %}
+		<link href="/static/js/prettify/prettify.css" rel="stylesheet">
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% endblock %}
+{% block icontent %}
+		<h1><a>{{ blog.title|title }}</a> <small>{{ blog.created|date:"d F Y" }} <g:plusone size="medium"></g:plusone></small></h1> 
+		<p class="lead"> {{ blog.title|title }}</p>
+		{{ blog.content|safe }}
+		<hr>
+		<div class="alert alert-info">
+		  <a class="close" data-dismiss="alert" href="#">&times;</a>
+			<div class="row">						  
+			  {% for tex in textlink %}
+			  {% if tex.sira == 3 or tex.sira == 4 %}
+			  <div class="span4"><a href="{{ tex.link }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+			  {% endif %}
+			  {% endfor %}
+		    </div>
+		</div>
+		<br>
+		<!-- Information -->
+		<table class="table table-bordered">
+			<tbody>
+			
+			<tr>
+				<th>
+					Author
+				</th>
+				<td>
+					<a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">{{ blog.author.first_name }} {{ yazi.author.last_name }}</span></a>
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
+					Category
+				</th>
+				<td>
+					<a href="{{ blog.category.get_absolute_url }}"><span class="label label-info">{{ blog.category }}</span></a>
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Description
+				</th>
+				<td>
+					{{ blog.description_chef }}
+				</td>
+			</tr>						
+			
+			<tr>
+				<th>
+					labels
+				</th>
+				<td>
+					{% for label in blog.get_tags %}
+					<a href="/blog/label/{{ label }}" title="{{ label }}"><span class="label label-info"># {{ label }}</span></a>
+					{% endfor %}
+				</td>
+			</tr>						
+
+			<tr>
+				<th>
+					Number of words
+				</th>
+				<td>
+					{{ blog.content|wordcount }}
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Text Length
+				</th>
+				<td>
+					{{ blog.content|length }}
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					Added Date
+				</th>
+				<td>
+					{{ blog.created }}
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
+					Modified Date
+				</th>
+				<td>
+					{{ blog.modified }}
+				</td>
+			</tr>													
+			
+			</tbody>
+		</table>							
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+	<script src="/static/js/prettify/prettify.js"></script>
+	<script type="text/javascript" src="http://apis.google.com/js/plusone.js">
+	  {lang: 'tr'}
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	
+{% endblock %}

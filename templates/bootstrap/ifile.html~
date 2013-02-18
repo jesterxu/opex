@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block ititle %}{{ ifile.title }}{% endblock %}
+{% block metas %}
+		<meta name="description" content="{{ ifile.description_chef }}">
+		<meta name="keywords" content="{{ ifile.labels }}">
+{% endblock %}
+{% block csss %}
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% endblock %}
+{% block icontent %}
+		<div class="span9">
+			<div class="alert alert-info">
+				<a class="close" data-dismiss="alert" href="#">&times;</a>
+				<div class="row">
+				{% for tex in textlink %}
+				{% if tex.sira == 1 or tex.sira == 2 %}
+				<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+				{% endif %}
+				{% endfor %}
+				</div>
+			</div>
+			<div class="alert alert-block">
+			  <a class="close" data-dismiss="alert" href="#">&times;</a>
+				  <h4 class="alert-heading">Important Warning!</h4>
+				  <span>The file you handle is not allowed by the security of  <strong>opex.welocalize.com</strong>.</span><br>						  
+			</div>
+			
+			<ul class="thumbnails">
+				<li class="span3">
+					<img src="/media/img/file/{{ ifile.file_picture }}.png" alt="{{ ifile.description_chef }}">
+				</li>
+				<li class="span6">
+					<div class="caption">
+					  <h1><a>{{ ifile.title }}</a> <small>{{ ifile.created|date:"d F Y" }}</small> </h1> 
+					  <p>{{ ifile.description }}</p>
+						<table class="table table-bordered">
+						<tbody>
+						
+						<tr>
+							<th>
+								File Tour
+							</th>
+							<td>
+								<span class="label label-info">{{ ifile.file_tour }}</span>
+							</td>
+						</tr>							
+						
+						<tr>
+							<th>
+								Added Date
+							</th>
+							<td>
+								{{ ifile.created }}
+							</td>
+						</tr>
+						
+						<tr>
+							<th>
+								Modified Date
+							</th>
+							<td>
+								{{ ifile.modified }}
+							</td>
+						</tr>
+						<tr>
+							<th>
+								Download Link
+							</th>
+							<td>
+								<a href="{{ ifile.file_source }}"><span class="label label-info">{{ ifile.title }}</span></a>
+							</td>
+						</tr>																	
+						</tbody>
+						</table>
+					</div>								
+				</li>	
+			</ul>
+			<hr>
+			<div class="alert alert-info">
+				<a class="close" data-dismiss="alert" href="#">&times;</a>
+				<div class="row">
+				{% for tex in textlink %}
+				{% if tex.sira == 3 or tex.sira == 4 %}
+				<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+				{% endif %}
+				{% endfor %}
+				</div>
+			</div>							
+		</div>
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+{% endblock %}

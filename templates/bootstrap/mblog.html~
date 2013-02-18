@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block ititle %}OPEX - Articles{% endblock %}
+{% block content %}
+			<div class="row">
+				<div class="span3">
+					<h3 class="submenu">OPEX</h3>
+					<div class="progress progress-info">
+					  <div class="bar"
+						   style="width: 20%;">%20</div>
+					</div>
+					<h3 class="submenu">Categories</h3>
+					 <ul class="nav nav-list">
+						<li class="nav-header">Blog</li>
+						{% for category in categories %}
+						<li><a href="{{ category.get_absolute_url }}" title="{{ category.description_chef }}"><i class="{{ category.category_picture }}"></i> {{ category.chef_title }}</a></li>
+						{% endfor %}
+						<li class="nav-header">Articles</li>	
+						{% for mcategory in mcategories %}
+						<li><a href="{{ mcategory.get_absolute_url }}" title="{{ mcategory.description_chef }}"><i class="{{ mcategory.category_picture }}"></i> {{ mcategory.chef_title }}</a></li>
+						{% endfor %}							
+					</ul>
+					<br>
+					<h3 class="submenu">Pages</h3>
+					 <ul class="nav nav-list">
+						{% for page in pages %}
+						<li><a href="{{ page.get_absolute_url }}" title="{{ page.description_chef }}"><i class="{{ page.picture }}"></i> {{ page.chef_title }}</a></li>
+						{% endfor %}
+					</ul>
+					<br>					
+					<h3 class="submenu">Articles</h3>
+					<ul class="nav nav-list">
+						{% for article in articles %}
+						<li><a href="{{ article.get_absolute_url }}" title="{{ article.description_chef }}"><i class="{{ article.category.category_picture }}"></i> {% if article.chef_title|length >= 25 %} {{ article.chef_title|slice:":25" }}... {% else %} {{ article.chef_title }} {% endif %}</a></li>
+						{% endfor %}
+					</ul>
+					<br>
+					<h3 class="submenu">Files</h3>
+					<ul class="nav nav-list">
+						{% for file in files %}
+						<li><a href="{{ file.get_absolute_url }}" title="{{ file.description_chef }}"><i class="icon-download"></i> {% if file.chef_title|length >= 25 %} {{ file.chef_title|slice:":25" }}... {% else %} {{ file.chef_title }} {% endif %}</a></li>
+						{% endfor %}
+					</ul>
+					<br>
+					<h3 class="submenu">Announcements</h3>
+					<ul class="nav nav-list">
+						{% for announcement in announcements %}
+						<li><a href="{{ announcement.get_absolute_url }}" title="{{ announcement.description_chef }}"><i class="{{ announcement.picture }}"></i> {% if announcement.chef_title|length >= 25 %} {{ announcement.chef_title|slice:":25" }}... {% else %} {{ announcement.chef_title }} {% endif %}</a></li>
+						{% endfor %}
+					</ul>
+					<br>
+					<h3 class="submenu">Advertisings</h3>
+					<ul class="nav nav-list">
+						{% for demonstration in demonstrations %}
+						<li><a href="{{ demonstration.get_absolute_url }}" title="{{ demonstration.description_chef }}"><i class="{{ demonstration_picture }}"></i> {% if demonstration.chef_title|length >= 25 %} {{ demonstration.chef_title|slice:":25" }}... {% else %} {{ demonstration.chef_title }} {% endif %}</a></li>
+						{% endfor %}
+					</ul>
+					<br>
+					{% for ban in banner %}
+					<a href="{{ ban.link }}" class="thumbnail" title="{{ ban.chef_title }}">
+						<img src="/media/{{ ban.picture }}" alt="{{ ban.description_chef }}" title="{{ ban.description_chef }}">
+					</a>
+					<br>
+					{% endfor %}
+				</div>
+				<div class="span9">
+					<div class="alert alert-info">
+						<a class="close" data-dismiss="alert" href="#">&times;</a>
+						<div class="row">
+						{% for tex in textlink %}
+						{% if tex.sira == 1 or tex.sira == 2 %}
+						<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+						{% endif %}
+						{% endfor %}
+						</div>
+					</div>
+					{% load pagination_tags %}
+					{% autopaginate articles 5 %}
+					{% for article in articles %}
+						<h1><a href="{{ article.get_absolute_url }}">{{ article.title|title }}</a> <small>{{ article.created|date:"d F Y" }}</small></h1> 
+						<p class="lead"> {{ article.description|title }}</p>
+						{{ article.content_home|safe }}
+						<div class="span offset7"><a href="{{ article.get_absolute_url }}" class="btn btn-medium btn-info" >Read More</a></div>
+						<br>
+						<hr>
+					{% endfor %}
+					{% paginate %}
+				</div>
+			</div>
+{% endblock %}	
+{% block javascriptler %}
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap-alert.js"></script>
+{% endblock %}		

@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+{% block ititle %}OPEX - Articles{% endblock %}
+{% block icontent %}
+		{% load pagination_tags %}
+		{% autopaginate articles 5 %}
+		{% for article in articles %}
+			<h1><a href="{{ article.get_absolute_url }}">{{ article.title|title }}</a> <small>{{ article.created|date:"d F Y" }}</small></h1> 
+			<p class="lead"> {{ article.description|title }}</p>
+			{{ article.content_home|safe }}
+			<div class="span offset7"><a href="{{ article.get_absolute_url }}" class="btn btn-medium btn-info" >Read More</a></div>
+			<br>
+			<hr>
+		{% endfor %}
+		{% paginate %}
+{% endblock %}	
+{% block javascriptler %}
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap-alert.js"></script>
+{% endblock %}		

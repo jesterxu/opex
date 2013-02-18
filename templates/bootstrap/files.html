@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% block ititle %}OPEX-Welocalize{% endblock %}
+
+{% block icontent %}		
+	<h1><a href="/files">Files</a> <small>Responsibility of the person downloading the files</small></h1>
+	<ul class="thumbnails">
+	{% load pagination_tags %}
+	{% autopaginate files 5 %}
+	{% for file in files %}
+		<li class="span3">
+		  <div class="thumbnail">
+			<img src="/media/img/file/{{ file.file_picture }}.png" alt="{{ file.description_chef }}">
+			<div class="caption">
+			  <h5>{{ file.title }}</h5>
+			  <p>{% if file.description|length >= 60 %} {{ file.description|slice:":60" }}... {% else %} {{ file.description }} {% endif %} </p>
+			  <p><a href="{{ file.file_source }}" class="btn btn-primary">Download</a> <a href="{{ file.get_absolute_url }}" class="btn">Description</a></p>
+			</div>
+		  </div>
+		</li>
+	{% endfor %}
+	{% paginate %}
+{% endblock %}	
+{% block javascriptler %}
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap-alert.js"></script>
+{% endblock %}		

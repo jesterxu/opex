@@ -1,0 +1,4 @@
+<?php
+$mail = $argv[1]
+?>SHELL=/bin/sh
+*/1 * * * * root /usr/bin/kontrol <?=$mail?> >/dev/null 2>&1

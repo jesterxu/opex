@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block ititle %}Upload the file{% endblock %}						
+{% block content %}
+	<h2>Apps created to easy our daily work!</h2>
+	<hr>
+	<div class="app-list">
+	   <table class="app-table">
+	      <tr>
+               <td>
+		<ul class="app">
+			<li><a href="/fillrelease">Fill Release</a></li>
+		</ul> 
+		<ul class="app">
+			<li><a href="/seleniumlog">Show Selenium logs</a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+	      </td>
+	      <td>
+		<ul class="app">
+			<li><a href="">new app will be added here       </a></li>
+		</ul> 
+		<ul class="app">
+			<li><a href="">       </a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+		<ul class="app">
+			<li><a href=""></a></li>
+		</ul>
+	     </td>
+             </tr>
+	  </table>
+	</div>
+	<hr>	
+
+			<!-- Bottom -->
+			<div class="row">
+				<div class="span12 footer">
+					<p>Design: <a href="https://github.com/halitalptekin/HDBlog-Theme"><span class="label label-info">Bootstrap</span></a> Coding: <a href="http://www.halitalptekin.com"><span class="label label-info">Python ve Django</span></a> System: <a href="https://github.com/halitalptekin/hdblog"><span class="label label-info">OPEX</span></a></p>
+					<p><a href="/rss/blogs/"><span class="label label-warning">Blogs</span></a> <a href="/rss/articles/"><span class="label label-warning">Articles</span></a> <a href="/rss/files/"><span class="label label-warning">Files</span></a> <a href="/rss/announcements/"><span class="label label-warning">Announcements</span></a></p>
+					<p>Welocalize &copy; 2012</p>
+				</div>
+			</div>
+{% endblock %}	
+{% block javascriptler %}
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/bootstrap-alert.js"></script>
+	<script src="/static/js/bootstrap-collapse.js"></script>
+{% endblock %}	
