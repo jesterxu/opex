@@ -1,8 +1,8 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 {% block ititle %}OPEX-Welocalize{% endblock %}
 
-{% block icontent %}
-			<!--div class="row">
+{% block content %}
+			<div class="row">
 				<div class="span3">
 					<h3 class="submenu">OPEX</h3>
 					<div class="progress progress-info">
@@ -62,27 +62,43 @@
 					</a>
 					<br>
 					{% endfor %}
-				</div-->
-		
-	<h1><a href="/files">Files</a> <small>Responsibility of the person downloading the files</small></h1>
-	<ul class="thumbnails">
-	{% load pagination_tags %}
-	{% autopaginate files 5 %}
-	{% for file in files %}
-		<li class="span3">
-		  <div class="thumbnail">
-			<img src="/media/img/file/{{ file.file_picture }}.png" alt="{{ file.description_chef }}">
-			<div class="caption">
-			  <h5>{{ file.title }}</h5>
-			  <p>{% if file.description|length >= 60 %} {{ file.description|slice:":60" }}... {% else %} {{ file.description }} {% endif %} </p>
-			  <p><a href="{{ file.file_source }}" class="btn btn-primary">Download</a> <a href="{{ file.get_absolute_url }}" class="btn">Description</a></p>
+				</div>
+				<div class="span9">
+					<div class="alert alert-info">
+						<a class="close" data-dismiss="alert" href="#">&times;</a>
+						<div class="row">
+						{% for tex in textlink %}
+						{% if tex.sira == 1 or tex.sira == 2 %}
+						<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
+						{% endif %}
+						{% endfor %}
+						</div>
+					</div>
+					<h1><a href="/files">Files</a> <small>Responsibility of the person downloading the files</small></h1>
+					<ul class="thumbnails">
+					{% load pagination_tags %}
+					{% autopaginate files 5 %}
+					{% for file in files %}
+						<li class="span3">
+						  <div class="thumbnail">
+							<img src="/media/img/file/{{ file.file_picture }}.png" alt="{{ file.description_chef }}">
+							<div class="caption">
+							  <h5>{{ file.title }}</h5>
+							  <p>{% if file.description|length >= 60 %} {{ file.description|slice:":60" }}... {% else %} {{ file.description }} {% endif %} </p>
+							  <p><a href="{{ file.file_source }}" class="btn btn-primary">Download</a> <a href="{{ file.get_absolute_url }}" class="btn">Description</a></p>
+							</div>
+						  </div>
+						</li>
+					{% endfor %}
+					{% paginate %}
+				</div>
 			</div>
-		  </div>
-		</li>
-	{% endfor %}
-	{% paginate %}
 {% endblock %}	
 {% block javascriptler %}
 <script src="/static/js/jquery.js"></script>
 <script src="/static/js/bootstrap-alert.js"></script>
 {% endblock %}		
+
+		</div>
+	</body>
+</html>

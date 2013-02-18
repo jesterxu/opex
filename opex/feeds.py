@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 from blog.models import Blogs
 from article.models import Articles
-from file.models import Files
+from ifile.models import Files
 from announcement.models import Announcements
 
 

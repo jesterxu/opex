@@ -3,7 +3,7 @@ from django import forms
 from blog.models import Blogs, Categories
 from article.models import Articles, mCategories
 from pages.models import Pages
-from file.models import Files
+from ifile.models import Files
 from link.models import Link
 from announcement.models import Announcements
 from advertising.models import Banner, TextLink, Demonstrations

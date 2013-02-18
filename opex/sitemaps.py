@@ -1,7 +1,7 @@
 from blog.models import Blogs, Categories
 from article.models import Articles, mCategories
 from pages.models import Pages
-from file.models import Files
+from ifile.models import Files
 from announcement.models import Announcements
 from advertising.models import Demonstrations
 

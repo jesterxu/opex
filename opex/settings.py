@@ -147,7 +147,7 @@ INSTALLED_APPS = (
     'blog',
     'article',
     'pages',
-    'file',
+    'ifile',
     'link',
     'announcement',
     'advertising',

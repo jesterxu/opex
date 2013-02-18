@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from blog.models import *
 from article.models import *
 from pages.models import *
-from file.models import *
+from ifile.models import *
 from announcement.models import *
 from advertising.models import *
 from django.contrib.sites.models import Site

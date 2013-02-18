@@ -34,7 +34,7 @@ class LastArticles(Feed):
 
 class LastBlogs(Feed):
     
-    baslik = "welocalize.Com - Last Blog"
+    title = "welocalize.Com - Last Blog"
     link = "/"
     description = "Opex programming for welocalize"
 
@@ -87,7 +87,7 @@ class LastFiles(Feed):
 
 
     def item_title(self, item):
-        return item.chef_title
+        return item.chef_title 
 
 
     def item_description(self, item):
@@ -95,12 +95,12 @@ class LastFiles(Feed):
 
     
     def item_pubdate(self, item):
-        return item.created
+        return item.created 
 
 RSS_URLS = patterns('',
                     url(r'^rss/$', LastBlogs()),
                     url(r'^rss/articles/$', LastArticles()),
                     url(r'^rss/blogs/$', LastBlogs()),
                     url(r'^rss/announcements/$', LastAnnouncements()),
-		    url(r'^rss/dosyalar/$', LastFiles()),
+		    url(r'^rss/files/$', LastFiles()),
 )
