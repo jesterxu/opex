@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block ititle %}generate media{% endblock %}						
+{% block icontent %}
+   <p>
+      <h2>This is the function to generate the media file for SW side.</h2><br />
+      Notices: Please make sure you checked the file generated and make sure all files are ok. <font color=red size="5px">We don't take responsiblity for any issue caused by this. :)</font>
+   </p>
+   <hr>
+    <form method="post" action="" enctype="multipart/form-data" accept-charset="utf-8">
+        {{iform}}
+         <br />
+         <input type="submit"  value="Generate Media" />
+    </form>
+{% endblock %}			

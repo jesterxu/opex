@@ -1,0 +1,32 @@
+from django.forms import ModelForm
+from django.db import models
+
+class UploadFile(models.Model):
+    ip=models.CharField(max_length=50)
+    ifile=models.FileField(upload_to="upload/tmp/")
+    created=models.DateTimeField(auto_now=True)
+
+class UploadFileForm(ModelForm):
+    class Meta:
+        model=UploadFile
+
+class generateMedia(models.Model):
+	PRODUCT_LIST=(
+			('Inventor','Inventor'),
+			('Naviswork','Naviswork'),
+			('Vault','Vault'),
+	)
+	MEDIA_TYPE=(
+			('Common','Common'),
+			('DLM','DLM'),
+			('WI','WI'),
+			('IMG','IMG'),
+			('ISO','ISO'),
+	)
+	product=models.CharField(max_length=100,choices=PRODUCT_LIST)
+	mediatype=models.CharField(max_length=100,choices=MEDIA_TYPE)
+	created=models.DateTimeField(auto_now=True)
+
+class generateMediaForm(ModelForm):
+	class Meta:
+		model=generateMedia

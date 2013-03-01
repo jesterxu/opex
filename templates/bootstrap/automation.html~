@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 {% block ititle %}Automation APPS{% endblock %}						
-{% block content %}
+{% block icontent %}
 	<h2>Apps created to easy our daily work!</h2>
 	<hr>
 	<div class="app-list">

@@ -6,7 +6,7 @@
 		<title>{% block ititle %}{% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		{% block metas %}
-		<meta name="description" content="Opex programming for welocalize">
+		<meta name="description" content="Auto programming for welocalize">
 		<meta name="keywords" content=" program, blog, personal blog, linux, python, django, php, bootstrap, seo, programming">		
 		{% endblock %}
 		<meta name="author" content="Jester Xu">
@@ -50,7 +50,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="/">OPEX</a>
+					<a class="brand" href="/">iAuto</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li><a href="/">Home</a></li>
@@ -58,7 +58,7 @@
 							<li><a href="/articles">Articles</a></li>
 							<li><a href="/files">Files</a></li>
 							<li><a href="/page/about">About</a></li>
-							<li><a href="/page/contact">Contact</a></li>
+							<!--li><a href="/page/contact">Contact</a></li-->
 							<li><a href="/automation">Automation</a></li>
 						</ul>				
 					</div>
@@ -72,8 +72,8 @@
 			<hr>
 			<div class="row">
 				<div class="span12 footer">
-					<p>Design: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Django</span></a> Coding: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Jester Xu</span></a> System: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">OPEX</span></a></p>
-					<p>Welocalize &copy; 2012</p>
+					<p>Design: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Django</span></a> Coding: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">Jester Xu</span></a> System: <a href="http://blog.sina.com.cn/jesterxu"><span class="label label-info">iAuto</span></a></p>
+					<p>Welocalize &copy; 2012-2013</p>
 				</div>
 			</div>
 {% endblock %}

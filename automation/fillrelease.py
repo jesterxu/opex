@@ -278,6 +278,8 @@ def fillrelease(ip, filename, sap):
             if findvalue(filelines, "Internal Version Number:")!=None:
                 sel.itype("id=FormControl_V1_I1_S5_I8_T8", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
             sel.itype("id=FormControl_V1_I1_S5_I8_T7", country) #Country of Origin
+
+
 # Return value from the line list. 
 def findvalue(linelist, keyvalue, spliter=":"):
     for line in linelist:
@@ -287,6 +289,8 @@ def findvalue(linelist, keyvalue, spliter=":"):
                     return line.split(keyvalue)[1].strip()
             else:
                 return line.split(keyvalue)[1].strip()
+
+
 
 # Return value from the line list. 
 def findvalues(linelist, keyvalue,index=1,  spliter=","):

@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from blog.models import *
 from article.models import *
 from pages.models import *
-from file.models import *
+from ifile.models import *
 from announcement.models import *
 from advertising.models import *
 from django.contrib.sites.models import Site
@@ -59,7 +59,7 @@ def upload_file(request):
 		    os.system('rm '+MEDIA_ROOT+"/"+unicode(newupload.ifile))
 		    return HttpResponseRedirect('/fillrelease/success')
 	else:
-		iform=UploadFileForm(initial={'ip':request.META['REMOTE_ADDR']})
+		iform=UploadFileForm(initial={'ip':request.META['REMOTE_ADDR'],"ip":"123"})
 	
 	ireturn=globals()
 	ireturn['iform']=iform

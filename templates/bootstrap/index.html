@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block ititle %}Operational excellence - OPEX{% endblock %}
+{% block ititle %}iAuto-automation{% endblock %}
 
 {% block content %}
 			<div class="row">
 				<div class="span3">
-					<h3 class="submenu">OPEX</h3>
+					<h3 class="submenu">iAuto</h3>
 					<div class="progress progress-info">
 					  <div class="bar"
 						   style="width: 50%;">50%</div>
@@ -66,13 +66,17 @@
 				<div class="span9">
 					<br>
 					<div class="alert alert-info">
+						This is a draft web site,we are fixing it and making it perfect.
 						<a class="close" data-dismiss="alert" href="#">&times;</a>
 						<div class="row">
+						
+						<!--
 						{% for tex in textlink %}
 						{% if tex.sira == 1 or tex.sira == 2 %}
 						<div class="span4"><a href="{{ tex.link }}" title="{{ tex.chef_title }}"><h4 class="alert-heading">{{ tex.title }}</h4></a><span>{{ tex.description }}</span></div>
 						{% endif %}
 						{% endfor %}
+						-->
 						</div>
 					</div>
 					{% block icontent %}{% endblock %}

@@ -64,7 +64,21 @@ def upload_file(request):
 	ireturn=globals()
 	ireturn['iform']=iform
 	return render_to_response('fillrelease.html',ireturn)
+#
+#this is the function to handle the SW create media issues. :)
+#
+def generate_media(request):
+	if request.method=='POST':
+		iform=generateMediaForm(request.POST,request.FILES)
+		#iform.save()
+		newupload=iform.save(commit=False)
+		os.system('python '+DIZIN+'automation/generatemedia.py '+newupload.product+' '+newupload.language+' '+newupload.mediatype)
+	else:
+		iform=generateMediaForm()
 
+	ireturn=globals()
+	ireturn['iform']=iform
+	return render_to_response('generatemedia.html',ireturn)
 
 def handle_uploaded_file(f):
     destination=open('test.txt', 'wb+')
