@@ -4,294 +4,483 @@ from selenium import selenium
 import unittest, time, re
 import sys
 
-def fillrelease(ip, filename, sap):
-    
-        fileobj=open(filename)
-        fileobj.seek(0)
-        filelines=fileobj.readlines()
-        fileobj.close()
-        
-        fileobj=open(sap)
-        fileobj.seek(0)
-        saplines=fileobj.readlines()
-        fileobj.close()
-        if findvalue(filelines, "Language:")!=None:
-            ilanguage=findvalue(filelines, "Language:").split("(")[0].strip()
-        releasetype=findvalue(filelines, "Media Type:")
-        country="United States"
-        osinfo=findvalue(filelines, "OS information:")
-        
-        if osinfo==None:
-            osinfo="Win 64 86"
-        
-        iselenium=selenium(ip,4444,"*iexplore","http://share.autodesk.com")
-        iselenium.start()
-        sel=iselenium
-        sel.set_timeout("10000")
-        sel.open("/sites/GBS_GRE/_layouts/FormServer.aspx?XsnLocation=https://share.autodesk.com/sites/GBS_GRE/GRSDBA/Forms/template.xsn&SaveLocation=https%3A%2F%2Fshare%2Eautodesk%2Ecom%2Fsites%2FGBS%5FGRE%2FGRSDBA&ClientInstalled=true&Source=https%3A%2F%2Fshare%2Eautodesk%2Ecom%2Fsites%2FGBS%5FGRE%2FGRSDBA%2FForms%2FAllItems%2Easpx&DefaultItemOpen=1")
-        sel.wait_for_page_to_load("30000")
-        sel.window_maximize()
-        
-        sel.select("id=FormControl_V1_I1_S2_I1_D1", "index=0")  #Market Group
-        sel.select("id=FormControl_V1_I1_S2_I1_D1", "index=1")
-        sel.select("id=FormControl_V1_I1_S2_I1_D2", "index=0")  # Division
-        sel.select("id=FormControl_V1_I1_S2_I1_D2", "index=7")  
-        sel.select("id=FormControl_V1_I1_S2_I1_D3", "index=0")  #NPI Manager
-        sel.select("id=FormControl_V1_I1_S2_I1_D3", "index=6")
-        
+#define the controls that will be used for iso page fill.
+class ipage(object):
+	'''
+	This part contains all the control id info on the 	fileobj=open(filename)
+	fileobj.seek(0)
+	filelines=fileobj.readlines()
+	fileobj.close()
+page need be filled.
+	'''
+	def __init__(self):
+		'''
+		Consturctor
+		'''
+		pass
+	MGRS_sl='//*[@id="imediakey_FormControl0_V1_I1_D2"]'
+	Division_sl='//*[@id="imediakey_FormControl0_V1_I1_D3"]'
+	NPI_sl='//*[@id="imediakey_FormControl0_V1_I1_D4"]'
 
-        if releasetype=="DVD" or releasetype=="DVD9":
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=0")  #Type of Release
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=1")
-            sel.select("id=FormControl_V1_I1_S3_I3_D6", "index=0")  # Software File System
-            #sel.select("id=FormControl_V1_I1_S3_I3_D6", "index=0")  
-            sel.select("id=FormControl_V1_I1_S3_I3_D7", "index=0")  #Network Path
-            sel.select("id=FormControl_V1_I1_S3_I3_D7", "index=1")  
-            sel.click("id=FormControl_V1_I1_S3_I3_C10") # UPI Required
-            while not sel.is_element_present("id=FormControl_V1_I1_S3_I3_S11_I5_T1"):
-                print "wait!"
-            
-            
-            #Product Language
-            if ilanguage!=None:
-                if ilanguage=="British English" or ilanguage=="Czech" or ilanguage=="Dutch" or ilanguage=="European English" or ilanguage=="German":
-                    sel.click("//input[@value='"+ilanguage+"']") 
-                else:
-                    sel.click("//input[@value='"+ilanguage+" ']") 
+	PL_cbl={
+			'British English':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[1]/span/input',
+			'CSY':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[2]/span/input',
+			'Dutch':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[3]/span/input',
+			'ENU':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[4]/span/input',
+			'FRA':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[5]/span/input',
+			'DEU':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[6]/span/input',
+			'HUN':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[7]/span/input',
+			'ITA':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[8]/span/input',
+			'JPN':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[9]/span/input',
+			'KOR':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[10]/span/input',
+			'Nordic':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[11]/span/input',
+			'PLK':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[12]/span/input',
+			'PTB':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[13]/span/input',
+			'RUS':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[14]/span/input',
+			'CHS':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[15]/span/input',
+			'ESP':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[16]/span/input',
+			'CHT':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[17]/span/input',
+			'Vietnamese':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[18]/span/input',
+			#will use the full name
+			'Czech':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[2]/span/input',
+			'English':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[4]/span/input',
+			'French':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[5]/span/input',
+			'German':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[6]/span/input',
+			'Hungarian':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[7]/span/input',
+			'Italian':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[8]/span/input',
+			'Japanese':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[9]/span/input',
+			'Japanese Kanji':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[9]/span/input',
+			'Korean':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[10]/span/input',
+			'Polish':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[12]/span/input',
+			'Portuguese':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[13]/span/input',
+			'Portuguese Brazil':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[13]/span/input',
+			'Russian':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[14]/span/input',
+			'Simplified Chinese':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[15]/span/input',
+			'Spanish':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[16]/span/input',
+			'European Spanish':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[16]/span/input',
+			'Tranditional Chinese':'//*[@id="imediakey_FormControl0_V1_I1_MSC5"]/fieldset/span/div[17]/span/input',
+			}
+	SAP_tf='//*[@id="imediakey_FormControl0_V1_I1_T6"]'
+	PN_tf='//*[@id="imediakey_FormControl0_V1_I1_T7"]'
 
-            if osinfo.find("Win")!=-1 and osinfo.find("64")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='WIN 32']") # Operating System
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-                sel.click("//input[@value='WIN 64']")    
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-            elif osinfo.find("Win")!=-1 and osinfo.find("86")!=-1:
-                sel.check("//input[@value='WIN 32']") # Operating System
-            elif osinfo.find("Win")!=-1 and osinfo.find("64")!=-1:
-                sel.check("//input[@value='WIN 64']")  
+	#iso special controls.
+	FN_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T8"]'
+	FS_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T9"]'
+	MD5_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T10"]'
+	OS_cbl={
+			'Linux 32Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[1]/span/input',
+			'Linux 64Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[2]/span/input',
+			'Mac 32Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[3]/span/input',
+			'Mac 64Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[4]/span/input',
+			'Unix':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[5]/span/input',
+			'Win 32Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[6]/span/input',
+			'Win 64Bit':'//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_MSC11"]/fieldset/span/div[7]/span/input',
+			}
+	SFS_sl='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_D12"]'
+	Net_Path_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T13"]'
+	build_number_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T14"]'
+	country_of_origin_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T15"]'
+	product_name_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_T16"]'
 
-            sel.itype("id=FormControl_V1_I1_S2_I1_T5", findvalues(saplines, findvalue(filelines, "Part Number:"))) #SAP description
-            sel.itype("id=FormControl_V1_I1_S2_I1_T6", findvalue(filelines, "Part Number:")) #Part Number
-            
-            if releasetype=="DVD":
-                sel.select("id=FormControl_V1_I1_S3_I3_D1", "index=0")  #Pyysical Media Type
-                sel.select("id=FormControl_V1_I1_S3_I3_D1", "index=1")  
-            else:
-                sel.select("id=FormControl_V1_I1_S3_I3_D1", "index=0")  #Pyysical Media Type
-            sel.itype("id=FormControl_V1_I1_S3_I3_T2", findvalue(filelines, "File Name:")) # File Name
-            sel.itype("id=FormControl_V1_I1_S3_I3_T3", findvalue(filelines, "File Size:").replace("bytes","")) # File size
-            sel.itype("id=FormControl_V1_I1_S3_I3_T4", findvalue(filelines, "MD5 Checksum:")) # MD5 checksum
+	# need click to expand this filed.
+	UPI_cb='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_C17"]'
+	UPI32_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_S18_I3_T1"]'
+	UPI64_tf='//*[@id="ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e_FormControl0_V1_I1_S18_I3_T2"]'
+
+#define the controls that USB will used.
+class usbpage(object):
+	usb_file_name_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T9"]'
+	usb_file_size_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T10"]'
+	MD5_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T11"]'
+	OS_cbl={
+			'Linux 32Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[1]/span/input',
+			'Linux 64Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[2]/span/input',
+			'Mac 32Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[3]/span/input',
+			'Mac 64Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[4]/span/input',
+			'Unix':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[5]/span/input',
+			'Win 32Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[6]/span/input',
+			'Win 64Bit':'//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_MSC12"]/fieldset/span/div[7]/span/input',
+			}
+	SFS_sl='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_D13"]'
+	network_path_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T14"]'
+	build_number_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T15"]'
+	country_of_origin_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T16"]'
+	product_name_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T17"]'
+	inventory_file_name_tf='//*[@id="ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a_FormControl0_V1_I1_T18"]'	
+	
+#define the controls that DLM will used.
+class dlmpage(object):
+	#all the controls that will be used sepical for DLM.
+	number_of_files_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_T9"]'
+	unpacked_file_size_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_T21"]'
+	end_user_download_link_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_T22"]'
+	OS_cbl={
+			'Linux 32Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[1]/span/input',
+			'Linux 64Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[2]/span/input',
+			'Mac 32Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[3]/span/input',
+			'Mac 64Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[4]/span/input',
+			'Unix':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[5]/span/input',
+			'Win 32Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[6]/span/input',
+			'Win 64Bit':'//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_MSC23"]/fieldset/span/div[7]/span/input',
+			}
+
+	network_path_sl='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_D24"]'
+	build_number_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_T25"]'
+	country_of_origin_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_T26"]'
+
+	OSFL_staging_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_S28_I2_T1"]'
+	OSFL_production_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_S28_I2_T2"]'
+	test_page_link_tf='//*[@id="ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b_FormControl0_V1_I1_S28_I2_T3"]'
 
 
 
-            if findvalue(filelines, "Internal Version Number:")!=None:
-                sel.itype("id=FormControl_V1_I1_S3_I3_T8", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
-            sel.itype("id=FormControl_V1_I1_S3_I3_T9", country) #Country of Origin
-            
-            sel.itype("id=FormControl_V1_I1_S3_I3_S11_I5_T1", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S3_I3_S11_I5_T2", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
+# define the controls that USB will used.
+class wipage(object):
+	file_name_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T9"]'
+	file_size_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T10"]'
+	unpacked_file_size_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T11"]'
+	end_user_download_link_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T12"]'
+
+	OS_cbl={
+			'Linux 32Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[1]/span/input',
+			'Linux 64Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[2]/span/input',
+			'Mac 32Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[3]/span/input',
+			'Mac 64Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[4]/span/input',
+			'Unix':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[5]/span/input',
+			'Win 32Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[6]/span/input',
+			'Win 64Bit':'//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_MSC13"]/fieldset/span/div[7]/span/input',
+			}
+	MD5_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T14"]'
+	network_path_sl='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_D15"]'
+	build_number_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T16"]'
+	country_of_origin_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_T17"]'
+
+	OSFL_staging_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_S19_I3_T1"]'
+	OSFL_production_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_S19_I3_T2"]'
+	test_page_link_tf='//*[@id="ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099_FormControl0_V1_I1_S19_I3_T3"]'
+
+#define the controls that LP will used.
+class lppage(object):
+	type_of_file_sl='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_D9"]'
+	file_name_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T10"]'
+	file_size_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T11"]'
+	unpacked_file_size_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T12"]'
+	end_user_download_link_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T13"]'
+
+	OS_cbl={
+			'Linux 32Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[1]/span/input',
+			'Linux 64Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[2]/span/input',
+			'Mac 32Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[3]/span/input',
+			'Mac 64Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[4]/span/input',
+			'Unix':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[5]/span/input',
+			'Win 32Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[6]/span/input',
+			'Win 64Bit':'//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_MSC14"]/fieldset/span/div[7]/span/input',
+			}
+	MD5_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T15"]'
+	network_path_sl='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_D16"]'
+	country_of_origin_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T17"]'
+	build_number_tf='//*[@id="ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2_FormControl0_V1_I1_T18"]'
 
 
-        elif releasetype=="WI":
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=0")  #Type of Release
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=4")
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=0")  #Distribution Package Type
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=6")
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=0")  #Network Path
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=1")  
-            sel.click("id=FormControl_V1_I1_S6_I9_C13") # UPI Required
-            while not sel.is_element_present("id=FormControl_V1_I1_S6_I9_S14_I5_T1"):
-                print "wait!"
-                
-            #Product Language
-            if ilanguage!=None:
-                if ilanguage=="British English" or ilanguage=="Czech" or ilanguage=="Dutch" or ilanguage=="European English" or ilanguage=="German":
-                    sel.click("//input[@value='"+ilanguage+"']") 
-                else:
-                    sel.click("//input[@value='"+ilanguage+" ']") 
-
-            if osinfo.find("Win")!=-1 and osinfo.find("64")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!"
-                sel.click("//input[@value='Win64Bit']")   
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-            elif osinfo.find("Win")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-            elif osinfo.find("Win")!=-1 and osinfo.find("64")!=-1:
-                sel.click("//input[@value='Win64Bit']")  
 
 
-            sel.itype("id=FormControl_V1_I1_S2_I1_T5",  findvalues(saplines, findvalue(filelines, "Part Number:"))) #SAP description
-            sel.itype("id=FormControl_V1_I1_S2_I1_T6", findvalue(filelines, "Part Number:")) #Part Number
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_T2", findvalue(filelines, "Root Product Version:")) # Root Product Version
-            #sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T1", findvalue(filelines, "File Name:")) # File Name
-            sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T2", findvalue(filelines, "File Size:").replace("bytes","")) # File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_T6", findvalue(filelines, "Unpacked File Size:").replace("bytes","")) # Unpacked File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_T7", findvalues(saplines, findvalue(filelines, "Part Number:"),2)) # End User Download Link
-            
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_S9_I14_T1", findvalue(filelines, "MD5 Checksum:")) #MD5 Checksum
-            sel.itype("id=FormControl_V1_I1_S6_I9_T11", country) #Country of Origin  
-            if findvalue(filelines, "Internal Version Number:")!=None:
-                sel.itype("id=FormControl_V1_I1_S6_I9_T12", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
-        
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T1", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T2", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S15_I15_T7", findvalue(filelines, "Link to Download Test Page:")) #Product Line Code (SAP):
-            sel.click("id=FormControl_V1_I1_S6_I9_S15_I15_C8") # File Approved
-            sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T1", findvalue(filelines, "File Name:")) # File Name
-        elif releasetype=="DLM":
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=0")  #Type of Release
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=4")
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=0")  #Distribution Package Type
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=2")
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=0")  #Network Path
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=1")  
-            sel.click("id=FormControl_V1_I1_S6_I9_C13") # UPI Required
-            while not sel.is_element_present("id=FormControl_V1_I1_S6_I9_S14_I5_T1"):
-                print "wait!"
-                
-            #Product Language
-            if ilanguage!=None:
-                if ilanguage=="British English" or ilanguage=="Czech" or ilanguage=="Dutch" or ilanguage=="European English" or ilanguage=="German":
-                    sel.click("//input[@value='"+ilanguage+"']") 
-                else:
-                    sel.click("//input[@value='"+ilanguage+" ']") 
-                    
-            if osinfo.find("Win")!=-1 and osinfo.find("64")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!"
-                sel.click("//input[@value='Win64Bit']")   
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-            elif osinfo.find("Win")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-            elif osinfo.find("Win")!=-1 and osinfo.find("64")!=-1:
-                sel.click("//input[@value='Win64Bit']")    
-                    
-            sel.itype("id=FormControl_V1_I1_S2_I1_T5",  findvalues(saplines, findvalue(filelines, "Part Number:"))) #SAP description
-            sel.itype("id=FormControl_V1_I1_S2_I1_T6", findvalue(filelines, "Part Number:")) #Part Number
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_T2", findvalue(filelines, "Root Product Version:")) # Root Product Version
-            sel.itype("id=FormControl_V1_I1_S6_I9_S3_I10_T1", findvalue(filelines, "Number of Associated Files:")) #Number of Associated Files
-            #sel.itype("id=FormControl_V1_I1_S6_I9_S3_I10_R2_I11_T1", findvalue(filelines, "File Name:")) # File Name
-            sel.itype("id=FormControl_V1_I1_S6_I9_S3_I10_R2_I11_T2", findvalue(filelines, "File Size:").replace("bytes","")) # File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_S3_I10_R2_I11_T3", findvalue(filelines, "MD5 Checksum:")) # MD5 Checksum:
-            sel.itype("id=FormControl_V1_I1_S6_I9_T6", findvalue(filelines, "Unpacked File Size:").replace("bytes","")) # Unpacked File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_T7",findvalues(saplines, findvalue(filelines, "Part Number:"),2)) # End User Download Link
-            sel.itype("id=FormControl_V1_I1_S6_I9_T11", country) #Country of Origin  
-            if findvalue(filelines, "Internal Version Number:")!=None:
-                sel.itype("id=FormControl_V1_I1_S6_I9_T12", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
-        
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T1", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T2", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S15_I15_T7", findvalue(filelines, "Link to Download Test Page:")) #Product Line Code (SAP):
-            sel.click("id=FormControl_V1_I1_S6_I9_S15_I15_C8") # File Approved
-            sel.itype("id=FormControl_V1_I1_S6_I9_S3_I10_R2_I11_T1", findvalue(filelines, "File Name:")) # File Name
-        elif releasetype=="ESD":
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=0")  #Type of Release
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=4")
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=0")  #Distribution Package Type
-            sel.select("id=FormControl_V1_I1_S6_I9_D1", "index=1")
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=0")  #Network Path
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=3")  
-            sel.click("id=FormControl_V1_I1_S6_I9_C13") # UPI Required
-            while not sel.is_element_present("id=FormControl_V1_I1_S6_I9_S14_I5_T1"):
-                print "wait!"
-            #Product Language
-            if ilanguage!=None:
-                if ilanguage=="British English" or ilanguage=="Czech" or ilanguage=="Dutch" or ilanguage=="European English" or ilanguage=="German":
-                    sel.click("//input[@value='"+ilanguage+"']") 
-                else:
-                    sel.click("//input[@value='"+ilanguage+" ']") 
+def fillrelease(ip, filename,mediatype): 
+	imediakey={
+		'ISO':'ctl00_m_g_38c01900_ebe8_4e26_9340_08e35315901e',
+		'USB':'ctl00_m_g_d211d17c_6e04_4fdc_9026_b77d0d0c707a',
+		'DLM':'ctl00_m_g_6ddee7ff_90a1_4122_ba4d_716d5fa9a89b',
+		'WI':'ctl00_m_g_e1f4c14b_c1e5_4ae5_a5cc_50225d5ef099',
+		'LP':'ctl00_m_g_a9810bc0_753f_476d_bdb4_0347be6610b2',
+		}
+	iselenium=selenium(ip,4444,'*iexplore','https://share.autodesk.com/sites/GBS_GRE/default.aspx')
+	iselenium.start()
+	sel=iselenium
+	sel.set_timeout('100000')
 
-            if osinfo.find("Win")!=-1 and osinfo.find("64")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!"
-                sel.click("//input[@value='Win64Bit']")   
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-            elif osinfo.find("Win")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-            elif osinfo.find("Win")!=-1 and osinfo.find("64")!=-1:
-                sel.click("//input[@value='Win64Bit']")  
+	# get all values from current input txt file.
+	allvalues=getallvalues(filename)
+	#handled according different mediatypes.
+	if mediatype=='ISO':
+		openpage(sel,'https://share.autodesk.com/sites/GBS_GRE/Lists/2014PMedia/Item/newifs.aspx')
+		fillISO(sel,allvalues,imediakey)
+	elif mediatype=='USB':
+		openpage(sel,'https://share.autodesk.com/sites/GBS_GRE/Lists/2014USB/Item/newifs.aspx')
+		fillUSB(sel,allvalues,imediakey)
+	elif mediatype=='DLM':
+		openpage(sel,'https://share.autodesk.com/sites/GBS_GRE/Lists/2014DLM/Item/newifs.aspx')
+		fillDLM(sel,allvalues,imediakey)
+	elif mediatype=='WI':
+		openpage(sel,'https://share.autodesk.com/sites/GBS_GRE/Lists/2014WI/Item/newifs.aspx')
+		fillWI(sel,allvalues,imediakey)
+	elif mediatype=='LP':
+		openpage(sel,'https://share.autodesk.com/sites/GBS_GRE/Lists/2014LP_SUP/Item/newifs.aspx')
+		fillLP(sel,allvalues,imediakey)
+	else:
+		print 'The media type you input cant be recongized.Please make sure you input the right type!'
 
-            sel.itype("id=FormControl_V1_I1_S2_I1_T5", findvalues(saplines, findvalue(filelines, "Part Number:"))) #SAP description
-            sel.itype("id=FormControl_V1_I1_S2_I1_T6", findvalue(filelines, "Part Number:")) #Part Number
-            
-            #sel.itype("id=FormControl_V1_I1_S6_I9_T2", findvalue(filelines, "Root Product Version:")) # Root Product Version
-            #sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T1", findvalue(filelines, "File Name:")) # File Name
-            sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T2", findvalue(filelines, "File Size:").replace("bytes","")) # File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_T6", findvalue(filelines, "Unpacked File Size:").replace("bytes","")) # Unpacked File Size
-            sel.itype("id=FormControl_V1_I1_S6_I9_T7", findvalues(saplines, findvalue(filelines, "Part Number:"),2)) # End User Download Link
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_S9_I14_T1", findvalue(filelines, "MD5 Checksum:")) #MD5 Checksum
-            sel.itype("id=FormControl_V1_I1_S6_I9_T11", country) #Country of Origin  
-            if findvalue(filelines, "Internal Version Number:")!=None:
-                sel.itype("id=FormControl_V1_I1_S6_I9_T12", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
-        
-            
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T1", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S14_I5_T2", findvalue(filelines, "Product Line Code (SAP):")) #Product Line Code (SAP):
-            sel.itype("id=FormControl_V1_I1_S6_I9_S5_I13_T1", findvalue(filelines, "File Name:")) # File Name
-        elif releasetype=="USB":
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=0")  #Type of Release
-            sel.select("id=FormControl_V1_I1_S2_I1_D7", "index=3")
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=0")  #Network Path
-            sel.select("id=FormControl_V1_I1_S6_I9_D10", "index=1")  
+	#iselenium.close()
 
-            #Product Language
-            if ilanguage!=None:
-                if ilanguage=="British English" or ilanguage=="Czech" or ilanguage=="Dutch" or ilanguage=="European English" or ilanguage=="German":
-                    sel.click("//input[@value='"+ilanguage+"']") 
-                else:
-                    sel.click("//input[@value='"+ilanguage+" ']") 
 
-            if osinfo.find("Win")!=-1 and osinfo.find("64")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!"
-                sel.click("//input[@value='Win64Bit']")   
-                while not sel.is_element_present("//input[@value='MAC 32']"):
-                    print "wait!" 
-            elif osinfo.find("Win")!=-1 and osinfo.find("86")!=-1:
-                sel.click("//input[@value='Win32Bit']") # Operating System
-            elif osinfo.find("Win")!=-1 and osinfo.find("64")!=-1:
-                sel.click("//input[@value='Win64Bit']")  
+ 
+#fill the ISO table.
+def fillISO(sel,allvalues,imediakey):
+	
+	#sel.iselect(ipage.SFS_sl,'ISO9660/Joliet')# select the Software file System.
+	#waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
+	#sel.iselect(ipage.MGRS_sl.replace('imediakey',imediakey['ISO']),allvalues['MGRS']) # select the market group field.
+	sel.iselect(ipage.Division_sl.replace('imediakey',imediakey['ISO']),allvalues['Division']) # select the Division.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
+	sel.iselect(ipage.NPI_sl.replace('imediakey',imediakey['ISO']),allvalues['NPI']) # select the NPI manager.
+	sel.iclick(ipage.PL_cbl[allvalues['PL']].replace('imediakey',imediakey['ISO'])) # select the product language.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
 
-            sel.itype("id=FormControl_V1_I1_S2_I1_T5", findvalue(filelines, "Product Line Code (SAP):")) #SAP description
-            sel.itype("id=FormControl_V1_I1_S2_I1_T6", findvalue(filelines, "Part Number:")) #Part Number
-            
-            sel.itype("id=FormControl_V1_I1_S5_I8_T1", findvalue(filelines, "File Name:")) # File Name
-            sel.itype("id=FormControl_V1_I1_S5_I8_T2", findvalue(filelines, "File Size:").replace("bytes","")) # File size
-            sel.itype("id=FormControl_V1_I1_S5_I8_T3", findvalue(filelines, "Inventory File Name:")) # File size
-                
-            sel.itype("id=FormControl_V1_I1_S5_I8_T5", findvalue(filelines, "MD5 Checksum:")) # MD5 checksum
-            if findvalue(filelines, "Internal Version Number:")!=None:
-                sel.itype("id=FormControl_V1_I1_S5_I8_T8", findvalue(filelines, "Internal Version Number:").split("_")[0]) # Internal Version Number(Build Number):
-            sel.itype("id=FormControl_V1_I1_S5_I8_T7", country) #Country of Origin
+	sel.itype(ipage.SAP_tf.replace('imediakey',imediakey['ISO']),allvalues['SAPD']) # fill the SAP description.
+	sel.itype(ipage.PN_tf.replace('imediakey',imediakey['ISO']),allvalues['PN']) # fill the part number.
+	waitfor(sel,ipage.FN_tf)
+
+	sel.itype(ipage.FN_tf,allvalues['FN']) # fill the file name.
+	sel.itype(ipage.FS_tf,allvalues['FS']) # fill the file size.
+	sel.itype(ipage.MD5_tf,allvalues['MD5'])# fill the MD5 checksum
+	if allvalues['OS'].find("32")!=-1:
+		sel.iclick(ipage.OS_cbl['Win 32Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
+	if allvalues['OS'].find("64")!=-1:
+		sel.iclick(ipage.OS_cbl['Win 64Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
+
+	sel.itype(ipage.Net_Path_tf,allvalues['NP'])# fill the network path.
+	sel.itype(ipage.build_number_tf,allvalues['IVN']) # fill the build number.
+	sel.itype(ipage.country_of_origin_tf,allvalues['COO'])# file the country of origin.
+	sel.itype(ipage.product_name_tf,allvalues['PNA'])# fill the product name.
+	if allvalues['UPI32']!='None':
+		try:
+			sel.click(ipage.UPI_cb)# check the UPI checkbox.
+		except:
+			print "error but passed."
+		sel.itype(ipage.UPI32_tf,allvalues['UPI32']) #fill the upi 32bits.
+		sel.itype(ipage.UPI64_tf,allvalues['UPI64']) # fill the upi 64bits.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['ISO']))
+
+
+	print 'fill ISO finished.!'
+
+#fill the USB table.
+def fillUSB(sel,allvalues,imediakey):
+	sel.iclick(ipage.PL_cbl[allvalues['PL']].replace('imediakey',imediakey['USB'])) # select the product language.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['USB']))
+
+	if allvalues['OS'].find("32")!=-1:
+		sel.iclick(usbpage.OS_cbl['Win 32Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['USB']))
+	if allvalues['OS'].find("64")!=-1:
+		sel.iclick(usbpage.OS_cbl['Win 64Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['USB']))		
+				
+	#sel.iselect(usbpage.SFS_sl,'ISO9660/Joliet')# select the Software file System.
+	#waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['USB']))
+		
+	sel.iselect(ipage.MGRS_sl.replace('imediakey',imediakey['USB']),allvalues['MGRS']) # select the market group field.
+	sel.iselect(ipage.Division_sl.replace('imediakey',imediakey['USB']),allvalues['Division']) # select the Division.
+	sel.iselect(ipage.NPI_sl.replace('imediakey',imediakey['USB']),allvalues['NPI']) # select the NPI manager.
+
+	sel.itype(ipage.SAP_tf.replace('imediakey',imediakey['USB']),allvalues['SAPD']) # fill the SAP description.
+	sel.itype(ipage.PN_tf.replace('imediakey',imediakey['USB']),allvalues['PN']) # fill the part number.
+
+	sel.itype(usbpage.usb_file_name_tf,allvalues['FN']) # fill the file name.
+	sel.itype(usbpage.usb_file_size_tf,allvalues['FS']) # fill the file size.
+	sel.itype(usbpage.MD5_tf,allvalues['MD5'])# fill the MD5 checksum
+
+	sel.itype(usbpage.network_path_tf,allvalues['NP'])# fill the network path.
+	sel.itype(usbpage.build_number_tf,allvalues['IVN']) # fill the build number.
+	sel.itype(usbpage.country_of_origin_tf,allvalues['COO'])# file the country of origin.
+	sel.itype(usbpage.product_name_tf,allvalues['PNA'])# fill the product name.
+	sel.itype(usbpage.inventory_file_name_tf,allvalues['IFN']) # fill the inventory file name.
+
+
+	print 'fill USB finished.!'
+
+#fill the DLM table.
+def fillDLM(sel,allvalues,imediakey):
+	sel.iclick(ipage.PL_cbl[allvalues['PL']].replace('imediakey',imediakey['DLM'])) # select the product language.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['DLM']))
+		
+	if allvalues['OS'].find("32")!=-1:
+		sel.iclick(dlmpage.OS_cbl['Win 32Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['DLM']))
+	if allvalues['OS'].find("64")!=-1:
+		sel.iclick(dlmpage.OS_cbl['Win 64Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['DLM']))
+	
+	sel.iselect(dlmpage.network_path_sl,'index=1') #select the network path.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['DLM']))
+		
+	sel.iselect(ipage.MGRS_sl.replace('imediakey',imediakey['DLM']),allvalues['MGRS']) # select the market group field.
+	sel.iselect(ipage.Division_sl.replace('imediakey',imediakey['DLM']),allvalues['Division']) # select the Division.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['DLM']))
+	sel.iselect(ipage.NPI_sl.replace('imediakey',imediakey['DLM']),allvalues['NPI']) # select the NPI manager.
+
+	sel.itype(ipage.SAP_tf.replace('imediakey',imediakey['DLM']),allvalues['SAPD']) # fill the SAP description.
+	sel.itype(ipage.PN_tf.replace('imediakey',imediakey['DLM']),allvalues['PN']) # fill the part number.
+
+	sel.itype(dlmpage.number_of_files_tf,allvalues['NOAF']) # fill the number of the files.
+	sel.itype(dlmpage.unpacked_file_size_tf,allvalues['UFS']) # fill the upacked file size.
+	sel.itype(dlmpage.end_user_download_link_tf,allvalues['URLR'])# fill the MD5 checksum
+
+	sel.itype(dlmpage.build_number_tf,allvalues['IVN']) # fill the build number.
+	sel.itype(dlmpage.country_of_origin_tf,allvalues['COO'])# file the country of origin.
+	sel.itype(dlmpage.test_page_link_tf,allvalues['PNA'])# fill the product name.
+
+
+	print 'fill DLM finished.!'
+
+#fill the WI table.
+def fillWI(sel,allvalues,imediakey):
+	sel.iselect(ipage.MGRS_sl.replace('imediakey',imediakey['WI']),allvalues['MGRS']) # select the market group field.
+	sel.iselect(ipage.Division_sl.replace('imediakey',imediakey['WI']),allvalues['Division']) # select the Division.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	
+	
+	sel.iselect(ipage.NPI_sl.replace('imediakey',imediakey['WI']),allvalues['NPI']) # select the NPI manager.
+	sel.iclick(ipage.PL_cbl[allvalues['PL']].replace('imediakey',imediakey['WI'])) # select the product language.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(ipage.SAP_tf.replace('imediakey',imediakey['WI']),allvalues['SAPD']) # fill the SAP description.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(ipage.PN_tf.replace('imediakey',imediakey['WI']),allvalues['PN']) # fill the part number.
+
+	sel.itype(wipage.file_name_tf,allvalues['FN']) # fill the file name.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(wipage.file_size_tf,allvalues['FS']) # fill the file size.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(wipage.unpacked_file_size_tf,allvalues['UFS']) #fill the unpacked file size.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(wipage.end_user_download_link_tf,allvalues['URLR'])
+	if allvalues['OS'].find("32")!=-1:
+		sel.iclick(wipage.OS_cbl['Win 32Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	if allvalues['OS'].find("64")!=-1:
+		sel.iclick(wipage.OS_cbl['Win 64Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(wipage.MD5_tf,allvalues['MD5'])
+	sel.iselect(wipage.network_path_sl,'index=1')# select the network path.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['WI']))
+	sel.itype(wipage.build_number_tf,allvalues['IVN']) # fill the build number.
+	sel.itype(wipage.country_of_origin_tf,allvalues['COO'])# file the country of origin.
+	sel.itype(wipage.test_page_link_tf,allvalues['EXL'])# fill the link of the Download page.
+
+	print 'fill the WI finished.!'
+
+#fill the LP table.
+def fillLP(sel,allvalues,imediakey):
+	sel.iclick(ipage.PL_cbl[allvalues['PL']].replace('imediakey',imediakey['LP'])) # select the product language.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))
+	if allvalues['OS'].find("32")!=-1:
+		sel.iclick(lppage.OS_cbl['Win 32Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))
+	if allvalues['OS'].find("64")!=-1:
+		sel.iclick(lppage.OS_cbl['Win 64Bit'])
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))
+		
+	sel.iselect(lppage.type_of_file_sl,'index=2') # select the file Type.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))
+	sel.iselect(lppage.network_path_sl,'index=2')# fill the network path.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))	
+	
+	sel.iselect(ipage.MGRS_sl.replace('imediakey',imediakey['LP']),allvalues['MGRS']) # select the market group field.
+	sel.iselect(ipage.Division_sl.replace('imediakey',imediakey['LP']),allvalues['Division']) # select the Division.
+	waitfor(sel,ipage.PN_tf.replace('imediakey',imediakey['LP']))
+	sel.iselect(ipage.NPI_sl.replace('imediakey',imediakey['LP']),allvalues['NPI']) # select the NPI manager.
+
+	sel.itype(ipage.SAP_tf.replace('imediakey',imediakey['LP']),allvalues['SAPD']) # fill the SAP description.
+	sel.itype(ipage.PN_tf.replace('imediakey',imediakey['LP']),allvalues['PN']) # fill the part number.
+
+	sel.itype(lppage.file_name_tf,allvalues['FN']) # fill the file name.
+	sel.itype(lppage.file_size_tf,allvalues['FS']) # fill the file size.
+	sel.itype(lppage.unpacked_file_size_tf,allvalues['UFS'])# fill the upacked file size.
+	sel.itype(lppage.end_user_download_link_tf,allvalues['URLR']) # fill the end user download link.
+
+	sel.itype(lppage.MD5_tf,allvalues['MD5']) # fill the MD5 value.
+	sel.itype(lppage.build_number_tf,allvalues['IVN']) # fill the build number.
+	sel.itype(lppage.country_of_origin_tf,allvalues['COO'])# file the country of origin.
+
+	print 'fill the LP finished.!'
+#Get the all the values from txt input.
+def getallvalues(filename):
+	# open the file and readlines.
+	fileobj=open(filename)
+	fileobj.seek(0)
+	filelines=fileobj.readlines()
+	fileobj.close()
+
+	allvalues={
+			'MGRS':findvalue(filelines,'Market Group Release Status'),
+			'Division':findvalue(filelines,'Division'),
+			'NPI':findvalue(filelines,'NPI Manager'),
+			'COO':findvalue(filelines,'Country Of Origin'),
+			'PL':findvalue(filelines,'Product Language'),
+			'IVN':findvalue(filelines,'Internal Version Number'),
+			'PK':findvalue(filelines,'Product Key'),
+			'NOAF':findvalue(filelines,'Number of Associated Files'),
+			'NP':findvalue(filelines,'Network Path'),
+			'FN':findvalue(filelines,'File Name'),
+			'PN':findvalue(filelines,'Part Number'),
+			'FS':findvalue(filelines,'File Size'),
+			'UFS':findvalue(filelines,'Unpacked File Size'),
+			'MT':findvalue(filelines,'Media Type'),
+			'MID':findvalue(filelines,'MID'),
+			'OS':findvalue(filelines,'Operating System'),
+			'MD5':findvalue(filelines,'MD5 Checksum'),
+			'SAPD':findvalue(filelines,'SAP Description'),
+			'RPV':findvalue(filelines,'Root Product Version'),
+			'URLR':findvalue(filelines,'URLRoot'),
+			'DTPL':findvalue(filelines,'Download TEST Page Link'),
+			'PNA':findvalue(filelines,'Product Name'),
+			'INL':findvalue(filelines,'Internal link'),
+			'EXL':findvalue(filelines,'External link'),
+			'IFN':findvalue(filelines,'Inventory File Name'),
+			'UPI32':findvalue(filelines,'Product Line Code (SAP)'),
+			'UPI64':findvalue(filelines,'Product Line Code (SAP)'),
+			}
+	return allvalues
+
 # Return value from the line list. 
-def findvalue(linelist, keyvalue, spliter=":"):
-    for line in linelist:
-        if line.find(keyvalue)!=-1:
-            if keyvalue=="File Size:":
-                if line.find( "Unpacked File Size:")==-1:
-                    return line.split(keyvalue)[1].strip()
-            else:
-                return line.split(keyvalue)[1].strip()
+def findvalue(linelist, keyvalue, spliter=':'):
+	keyvalue=keyvalue.lower()
+	for line in linelist:
+		if line.lower().find(keyvalue)!=-1:
+			if keyvalue.find("file size")!=-1:
+				return line.replace(line.split(spliter)[0]+':','').split("bytes")[0].strip()
+			else:
+				return line.replace(line.split(spliter)[0]+':','').strip()
+
+#Open the page and wait for it to load.
+def openpage(sel,ipage):
+	sel.open(ipage)
+	sel.wait_for_page_to_load('30000')
+	sel.window_maximize()
+
+# wait for the control to appear.
+def waitfor(sel,icontrol):
+	try:
+		while not sel.is_element_present(icontrol):
+			print "wait!"
+	except:
+		try:
+			while not sel.is_element_present(icontrol):
+				print "wait!"
+		except:
+			print "wait for control failed:"+icontrol
 
 # Return value from the line list. 
-def findvalues(linelist, keyvalue,index=1,  spliter=","):
+def findvalues(linelist, keyvalue,index=1,  spliter=','):
     for line in linelist:
         if line.find(keyvalue)!=-1:
             return line.split(spliter)[index].strip()
-if __name__=="__main__":
-	fillrelease(sys.argv[1], sys.argv[2], sys.argv[3])
+            
+if __name__=='__main__':
+	fillrelease(sys.argv[1], sys.argv[2],sys.argv[3])
+
+
+
+
+
+

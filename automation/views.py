@@ -52,12 +52,19 @@ def upload_file(request):
 	if request.method=='POST':
 		iform=UploadFileForm(request.POST, request.FILES)
 		if iform.is_valid():
+			
 		    iform.save()
 		    newupload=iform.save(commit=False)
-		    os.system('python '+DIZIN+'automation/fillrelease.py ' + newupload.ip+ ' '+MEDIA_ROOT+"/"+unicode(newupload.ifile)+' '+DIZIN+'automation/bom_edm.csv')
-		    print newupload.ifile
+		    print newupload.ip+':'+str(newupload.ifile)+':'+newupload.mediatype
+		    
+		    #if newupload.tasktype.find('Tracker')!=-1:
+		    	#iproduct=newupload.tasktype.split('Fill')[1].split('Build')[0].strip()
+		    	#print iproduct
+		    	#os.system('python '+DIZIN+'automation/fillbuildtracker.py ' + iproduct+ ' '+MEDIA_ROOT+"/"+unicode(newupload.ifile)+' '+newupload.mediatype)
+		    #else:
+		    os.system('python '+DIZIN+'automation/fillscore.py ' + newupload.ip+ ' '+MEDIA_ROOT+"/"+unicode(newupload.ifile)+' '+newupload.mediatype)
 		    os.system('rm '+MEDIA_ROOT+"/"+unicode(newupload.ifile))
-		    return HttpResponseRedirect('/fillrelease/success')
+		    #return HttpResponseRedirect('/fillrelease/success')
 	else:
 		iform=UploadFileForm(initial={'ip':request.META['REMOTE_ADDR']})
 	
@@ -70,7 +77,7 @@ def upload_file(request):
 def generate_media(request):
 	if request.method=='POST':
 		iform=generateMediaForm(request.POST,request.FILES)
-		#iform.save()
+		iform.save()
 		newupload=iform.save(commit=False)
 		os.system('python '+DIZIN+'automation/generatemedia.py '+newupload.product+' '+newupload.language+' '+newupload.mediatype)
 	else:
